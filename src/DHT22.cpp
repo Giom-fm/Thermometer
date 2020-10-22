@@ -75,17 +75,17 @@ dht22_error DHT22::get_values(float* temperature, float* humidity) {
   uint8_t temperature_lsb, temperature_msb, humidity_lsb, humidity_msb,
       checksum, compare_sum;
 
-  humidity_lsb = this->get_value(HUMIDITY_LSB_START);
   humidity_msb = this->get_value(HUMIDITY_MSB_START);
-  temperature_lsb = this->get_value(TEMPERATURE_LSB_START);
+  humidity_lsb = this->get_value(HUMIDITY_LSB_START);
   temperature_msb = this->get_value(TEMPERATURE_MSB_START);
+  temperature_lsb = this->get_value(TEMPERATURE_LSB_START);
   checksum = this->get_value(CHECKSUM_START);
   compare_sum = humidity_lsb + humidity_msb + temperature_lsb + temperature_msb;
 
   if (checksum != compare_sum) return DHT22Error::CHECKSUM_MISSMATCH;
 
-  *temperature = (((uint16_t)temperature_lsb << 8) | temperature_msb) / FACTOR;
-  *humidity = (((uint16_t)humidity_lsb << 8) | humidity_msb) / FACTOR;
+  *temperature = (((uint16_t)temperature_msb << 8) | temperature_lsb) / FACTOR;
+  *humidity = (((uint16_t)humidity_msb << 8) | humidity_lsb) / FACTOR;
 
   return DHT22Error::OK;
 }
