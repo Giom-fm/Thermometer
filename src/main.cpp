@@ -31,7 +31,7 @@ int main() {
     if (error) {
       print_ln_debug("DHT22 Error 0x%X", error);
     } else {
-      print_ln_debug("Temperature: %.1f°C\nHumidity: %.1f%", temperature, humidity);
+      print_ln_debug("Temperature: %.1f°C\nHumidity: %.1f%%", temperature, humidity);
     }
     _delay_ms(2500);
   }
