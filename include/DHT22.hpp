@@ -12,14 +12,13 @@
 #define CHECKSUM_START 32
 #define WORD_LENGTH 8
 #define FACTOR 10.0f
+#define NEGATIV_BIT 7
 
 #define STREAM_LENGTH 40
 
 #define START_LOW_DELAY 1100
 #define START_HIGH_DELAY 40
 
-#define RESPONSE_LOW_DELAY 80
-#define RESPONSE_HIGH_DELAY 80
 
 // 1ms/(1/F_CPU) = Clock cycles in 1 Ms
 #define TIMEOUT_CYCLES 16000

@@ -50,7 +50,7 @@ dht22_error DHT22::start() {
 uint16_t DHT22::get_pulse_length(level_t level) {
   uint16_t cycles = 0;
 
-  while ((IS_BIT_SET(PIND, this->data_pin) == level) &&
+  while ((CHECK_BIT(PIND, this->data_pin) == level) &&
          cycles < TIMEOUT_CYCLES) {
     ++cycles;
   }
@@ -70,10 +70,10 @@ uint8_t DHT22::get_value(const uint8_t from) {
   return value;
 }
 
-// TODO check 1 Bit of Temp for negativ temperature
 dht22_error DHT22::get_values(float* temperature, float* humidity) {
   uint8_t temperature_lsb, temperature_msb, humidity_lsb, humidity_msb,
       checksum, compare_sum;
+  int8_t pre_factor = 1;
 
   humidity_msb = this->get_value(HUMIDITY_MSB_START);
   humidity_lsb = this->get_value(HUMIDITY_LSB_START);
@@ -84,7 +84,12 @@ dht22_error DHT22::get_values(float* temperature, float* humidity) {
 
   if (checksum != compare_sum) return DHT22Error::CHECKSUM_MISSMATCH;
 
-  *temperature = (((uint16_t)temperature_msb << 8) | temperature_lsb) / FACTOR;
+  if (CHECK_BIT(temperature_msb, NEGATIV_BIT)) {
+    CLEAR_BIT(temperature_msb, NEGATIV_BIT);
+    pre_factor = -1;
+  }
+  *temperature = (((uint16_t)temperature_msb << 8) | temperature_lsb) / FACTOR *
+                 pre_factor;
   *humidity = (((uint16_t)humidity_msb << 8) | humidity_lsb) / FACTOR;
 
   return DHT22Error::OK;
