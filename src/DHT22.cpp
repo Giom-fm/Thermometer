@@ -102,14 +102,12 @@ dht22_error DHT22::read(float* temperature, float* humidity) {
 
   if (!error) {
     uint8_t i = 0;
-
-    // FIXME change to while
-    do {
+    while (i < STREAM_LENGTH && this->low_cycles[i] < TIMEOUT_CYCLES &&
+           this->high_cycles[i] < TIMEOUT_CYCLES) {
       this->low_cycles[i] = this->get_pulse_length(LOW);
       this->high_cycles[i] = this->get_pulse_length(HIGH);
       ++i;
-    } while (i < STREAM_LENGTH && this->low_cycles[i - 1] < TIMEOUT_CYCLES &&
-             this->high_cycles[i - 1] < TIMEOUT_CYCLES);
+    }
 
     if (i < STREAM_LENGTH) {
       error = DHT22Error::TIMEOUT;
