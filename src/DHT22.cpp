@@ -9,6 +9,8 @@
 
 #define DEBUG 1
 
+
+ 
 DHT22::DHT22(uint8_t data_pin) : data_pin(data_pin) {
   DDRD |= (1 << this->data_pin);
   PORTD |= (1 << this->data_pin);
